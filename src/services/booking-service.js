@@ -54,6 +54,11 @@ async function makePayment(data) {
         }
         // we assume here that payment is successful
         await bookingRepository.update(data.bookingId, { status: BOOKED }, transaction);
+        Queue.sendData({
+            recepientEmail: 'sumitgaurav6295@gmail.com',
+            subject: 'Flight booked',
+            text: `Booking successfully done for the booking ${data.bookingId}`
+        });
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
